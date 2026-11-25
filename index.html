@@ -5,99 +5,94 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BALDUR PHONE RESET</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #080d18;
+    background: #080b12;
     color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 header {
-    padding: 22px;
-    text-align: center;
-    background: #101a2e;
+    padding: 25px 10px;
+    background: #101827;
     border-bottom: 2px solid #087cff;
 }
 
-header h1 {
+h1 {
     color: #168bff;
-    font-size: 25px;
-    margin: 0;
-}
-
-header p {
-    color: #aaa;
-    font-size: 12px;
-}
-
-.hero {
-    text-align: center;
-    padding: 65px 20px;
-}
-
-.hero h2 {
-    font-size: 32px;
-}
-
-.hero h2 span {
-    color: #168bff;
-}
-
-.hero p {
-    color: #bbb;
-    line-height: 1.7;
+    font-size: 27px;
 }
 
 .container {
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
-}
-
-.card {
-    background: #111c30;
+    width: 90%;
+    max-width: 450px;
+    margin: 35px auto;
     padding: 25px;
-    margin-bottom: 20px;
+    background: #111827;
+    border: 1px solid #087cff;
     border-radius: 15px;
-    border: 1px solid #263b5b;
-    text-align: center;
+    box-shadow: 0 0 20px #087cff33;
 }
 
-.card h3 {
-    color: #168bff;
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 9px 0;
+    border: 1px solid #087cff;
+    border-radius: 8px;
+    background: #080b12;
+    color: white;
+    font-size: 16px;
 }
 
-.btn {
-    display: block;
-    padding: 15px;
-    margin-top: 15px;
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
     background: #087cff;
     color: white;
-    text-decoration: none;
-    border-radius: 9px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
     font-weight: bold;
+    cursor: pointer;
 }
 
-.btn:hover {
-    background: #0059c9;
+button:hover {
+    background: #005ac0;
 }
 
-.warning {
-    color: #ffcc66;
-    font-size: 13px;
+.link {
+    display: block;
+    color: #45a5ff;
+    margin-top: 18px;
+    cursor: pointer;
+}
+
+.hidden { display: none; }
+
+#message {
+    color: #45a5ff;
+    margin-top: 15px;
+    overflow-wrap: anywhere;
+}
+
+.info {
+    color: #cbd5e1;
     line-height: 1.6;
+    font-size: 14px;
 }
 
 footer {
-    text-align: center;
     padding: 25px;
-    color: #777;
-    font-size: 12px;
+    color: #778399;
+    font-size: 13px;
 }
 </style>
 </head>
@@ -106,55 +101,206 @@ footer {
 
 <header>
     <h1>BALDUR PHONE RESET</h1>
-    <p>ASSISTANCE • ANDROID • SAMSUNG</p>
+    <p>Assistance et récupération Android</p>
 </header>
 
-<section class="hero">
-    <h2>Bienvenue chez <span>BALDUR</span></h2>
-    <p>
-        Votre espace d'assistance pour la réinitialisation
-        et la récupération de vos téléphones Android.
+<div class="container" id="authBox">
+
+    <div id="signupForm" class="hidden">
+        <h2>Créer un compte</h2>
+        <input type="email" id="signupEmail" placeholder="Adresse e-mail">
+        <input type="password" id="signupPassword" placeholder="Mot de passe (6 caractères minimum)">
+        <button onclick="signUp()">Créer mon compte</button>
+        <span class="link" onclick="showForm('loginForm')">Déjà inscrit ? Se connecter</span>
+    </div>
+
+    <div id="loginForm">
+        <h2>Connexion</h2>
+        <input type="email" id="loginEmail" placeholder="Adresse e-mail">
+        <input type="password" id="loginPassword" placeholder="Mot de passe">
+        <button onclick="signIn()">Se connecter</button>
+        <span class="link" onclick="showForm('signupForm')">Créer un compte</span>
+        <span class="link" onclick="showForm('forgotForm')">Mot de passe oublié ?</span>
+    </div>
+
+    <div id="forgotForm" class="hidden">
+        <h2>Récupération du compte</h2>
+        <input type="email" id="forgotEmail" placeholder="Ton adresse e-mail">
+        <button onclick="resetPassword()">Envoyer le lien</button>
+        <span class="link" onclick="showForm('loginForm')">Retour à la connexion</span>
+    </div>
+
+    <div id="newPasswordForm" class="hidden">
+        <h2>Nouveau mot de passe</h2>
+        <input type="password" id="newPassword" placeholder="Nouveau mot de passe">
+        <button onclick="updatePassword()">Enregistrer</button>
+    </div>
+
+    <p id="message"></p>
+</div>
+
+<div class="container hidden" id="memberBox">
+    <h2>Bienvenue !</h2>
+    <p class="info">Tu es connecté à ton espace membre BALDUR PHONE RESET.</p>
+
+    <h3>Assistance Android</h3>
+    <p class="info">
+        Nous t'aidons à retrouver les méthodes officielles
+        pour réinitialiser ton propre téléphone.
     </p>
-</section>
 
-<div class="container">
+    <button onclick="window.open('https://www.google.com/android/find/', '_blank')">
+        Localiser mon téléphone Android
+    </button>
 
-    <div class="card">
-        <h3>📱 SAMSUNG</h3>
-        <p>Retrouvez les solutions officielles pour votre téléphone Samsung.</p>
-        <a class="btn" href="https://www.samsung.com/fr/support/">
-            Assistance Samsung
-        </a>
-    </div>
+    <button onclick="window.open('https://www.samsung.com/fr/support/', '_blank')">
+        Assistance Samsung
+    </button>
 
-    <div class="card">
-        <h3>🤖 ANDROID</h3>
-        <p>Retrouvez votre appareil Android et gérez sa sécurité.</p>
-        <a class="btn" href="https://android.com/find">
-            Localiser mon téléphone
-        </a>
-    </div>
+    <p class="info">
+        Attention : une réinitialisation d'usine efface les données
+        du téléphone. Elle doit être effectuée avec l'autorisation
+        de son propriétaire.
+    </p>
 
-    <div class="card">
-        <h3>🔐 RÉINITIALISATION</h3>
-        <p>
-            Découvrez comment réinitialiser votre téléphone
-            en toute sécurité.
-        </p>
-        <p class="warning">
-            Attention : la réinitialisation d'usine efface
-            les données enregistrées sur le téléphone.
-            Utilisez uniquement les procédures officielles
-            et assurez-vous d'être propriétaire de l'appareil.
-        </p>
-    </div>
-
+    <button onclick="signOut()">Déconnexion</button>
 </div>
 
 <footer>
-    © 2026 BALDUR PHONE RESET<br>
-    Tous droits réservés.
+    BALDUR PHONE RESET © 2026
 </footer>
 
+<script>
+const SUPABASE_URL = "https://mwjgdknhxvfapdwvhgmx.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_fmYw6LGy3tvTsK9WzckK-Q_-KhBOjTf";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+function showForm(formId) {
+    document.querySelectorAll("#authBox > div").forEach(div => {
+        div.classList.add("hidden");
+    });
+    document.getElementById(formId).classList.remove("hidden");
+    showMessage("");
+}
+
+function showMessage(text) {
+    document.getElementById("message").textContent = text;
+}
+
+function redirectUrl() {
+    return window.location.origin + window.location.pathname;
+}
+
+async function signUp() {
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+
+    if (!email || password.length < 6) {
+        showMessage("Entre un e-mail valide et un mot de passe d'au moins 6 caractères.");
+        return;
+    }
+
+    const { error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: redirectUrl() }
+    });
+
+    if (error) {
+        showMessage(error.message);
+    } else {
+        showMessage("Inscription envoyée ! Vérifie ta boîte e-mail pour confirmer ton compte.");
+    }
+}
+
+async function signIn() {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        showMessage(error.message);
+    }
+}
+
+async function resetPassword() {
+    const email = document.getElementById("forgotEmail").value.trim();
+
+    if (!email) {
+        showMessage("Entre ton adresse e-mail.");
+        return;
+    }
+
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectUrl()
+    });
+
+    if (error) {
+        showMessage(error.message);
+    } else {
+        showMessage("Lien envoyé ! Vérifie ta boîte e-mail.");
+    }
+}
+
+async function updatePassword() {
+    const password = document.getElementById("newPassword").value;
+
+    if (password.length < 6) {
+        showMessage("Le mot de passe doit contenir au moins 6 caractères.");
+        return;
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({
+        password
+    });
+
+    if (error) {
+        showMessage(error.message);
+    } else {
+        showMessage("Mot de passe modifié avec succès !");
+        await showSession();
+    }
+}
+
+async function signOut() {
+    await supabaseClient.auth.signOut();
+    showMessage("Tu es déconnecté.");
+}
+
+async function showSession() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    if (session) {
+        document.getElementById("authBox").classList.add("hidden");
+        document.getElementById("memberBox").classList.remove("hidden");
+    } else {
+        document.getElementById("authBox").classList.remove("hidden");
+        document.getElementById("memberBox").classList.add("hidden");
+        showForm("loginForm");
+    }
+}
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+        document.getElementById("authBox").classList.remove("hidden");
+        document.getElementById("memberBox").classList.add("hidden");
+        showForm("newPasswordForm");
+    } else {
+        showSession();
+    }
+});
+
+showSession();
+</script>
+
 </body>
-  </html>
+</html>
